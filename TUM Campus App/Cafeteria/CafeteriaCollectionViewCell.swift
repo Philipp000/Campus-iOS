@@ -14,6 +14,7 @@ final class CafeteriaCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var addressLabel: UILabel!
     @IBOutlet weak var openMenuBtn: OpenMenuBtnClass!
+    @IBOutlet weak var queueStatusProgress: UIProgressView!
 
     private static let distanceFormatter: MKDistanceFormatter = {
         let formatter = MKDistanceFormatter()
@@ -35,6 +36,13 @@ final class CafeteriaCollectionViewCell: UICollectionViewCell {
             distanceLabel.textAlignment = .right
         } else {
             distanceLabel.text = ""
+        }
+        
+        if let percent = cafeteria.queue?.percent {
+            queueStatusProgress.setProgress(percent / 100, animated: false)
+            queueStatusProgress.isHidden = false
+        }else{
+            queueStatusProgress.isHidden = true
         }
         
         //MARK: - Constraints

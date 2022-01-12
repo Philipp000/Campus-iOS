@@ -159,7 +159,7 @@ class CafeteriaMapViewController: UIViewController, CLLocationManagerDelegate, U
         title = "Cafeterias".localized
     }
     
-    private func fetch() {
+    private func fetch() {        
         sessionManager.request(endpoint).responseDecodable(of: [Cafeteria].self, decoder: JSONDecoder()) { [weak self] response in
             var cafeterias: [Cafeteria] = response.value ?? []
             if let currentLocation = self?.locationManager.location {
@@ -169,6 +169,14 @@ class CafeteriaMapViewController: UIViewController, CLLocationManagerDelegate, U
             self?.mapView.addAnnotations(response.value ?? [])
             
             self?.allCafs = cafeterias
+            
+            for cafeteria in cafeterias {
+                if let queue = cafeteria.queueStatusApi  {
+                    self!.sessionManager.request(queue, method: .get).responseDecodable(of: Queue.self, decoder: JSONDecoder()){ [weak self] response in
+                        cafeteria.queue = response.value
+                    }
+                }
+            }
 
             var snapshot = NSDiffableDataSourceSnapshot<Section, Cafeteria>()
             snapshot.appendSections([.main])

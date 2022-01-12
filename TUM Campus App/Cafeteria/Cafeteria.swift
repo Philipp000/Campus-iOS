@@ -17,6 +17,11 @@ struct Location: Decodable {
     var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: latitude, longitude: longitude) }
 }
 
+struct Queue: Decodable {
+    let current: Int
+    let percent: Float
+}
+
 final class Cafeteria: NSObject, Decodable, MKAnnotation {
     /*
      "location": {
@@ -31,6 +36,8 @@ final class Cafeteria: NSObject, Decodable, MKAnnotation {
     let location: Location
     let name: String
     let id: String
+    let queueStatusApi: String?
+    var queue: Queue?
 
     var coordinate: CLLocationCoordinate2D { location.coordinate }
     var title: String? { name }
@@ -39,6 +46,8 @@ final class Cafeteria: NSObject, Decodable, MKAnnotation {
         case location
         case name
         case id = "canteen_id"
+        case queueStatusApi = "queue_status"
+        case queue
     }
     
 }
