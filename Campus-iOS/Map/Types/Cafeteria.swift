@@ -21,6 +21,33 @@ struct Queue: Decodable, Hashable {
     let percent: Float
 }
 
+struct Time: Decodable, Hashable{
+    let hours: Int
+    let minutes: Int
+    
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let stringValue = try container.decode(String.self)
+        let parts = stringValue.components(separatedBy: ":")
+        self.hours =  Int(parts[0]) ?? 0
+        self.minutes =  Int(parts[1]) ?? 0
+    }
+}
+
+struct OpenHoursDay: Decodable, Hashable{
+    let start: Time
+    let end: Time
+}
+
+struct OpenHoursWeek: Decodable, Hashable {
+    let mon: OpenHoursDay
+    let tue: OpenHoursDay
+    let wed: OpenHoursDay
+    let thu: OpenHoursDay
+    let fri: OpenHoursDay
+}
+
 struct Cafeteria: Decodable, Hashable {
     /*
      "location": {
@@ -41,6 +68,8 @@ struct Cafeteria: Decodable, Hashable {
 
     var coordinate: CLLocationCoordinate2D { location.coordinate }
     var title: String? { name }
+    
+    let openHours: OpenHoursWeek?
 
     enum CodingKeys: String, CodingKey {
         case location
@@ -48,6 +77,7 @@ struct Cafeteria: Decodable, Hashable {
         case id = "canteen_id"
         case queueStatusApi = "queue_status"
         case queue
+        case openHours = "open_hours"
     }
     
 }

@@ -52,10 +52,7 @@ final class MealPlanViewModel: ObservableObject {
         _ = MensaEnumService.shared.getLabels()
     }
     
-    func addMealPlans(mealPlans: MealPlan){
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
+    func addMealPlans(mealPlans: MealPlan){        
         self.menus.append(contentsOf: mealPlans.days
             .filter { !$0.dishes.isEmpty && ($0.date.isToday || $0.date.isLaterThanOrEqual(to: Date())) }
             .sorted { $0.date < $1.date }
